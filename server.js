@@ -1,14 +1,13 @@
-// server.js
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
 
-let nowList = [];      // aktuelle Events
-let historyList = [];  // alle jemals empfangenen
+let nowList = [];
+let historyList = [];
 
 app.post("/join", (req, res) => {
 	const data = req.body;
@@ -26,9 +25,7 @@ app.post("/join", (req, res) => {
 	nowList.unshift(entry);
 	historyList.unshift(entry);
 
-	// Now-Liste kurz halten
 	if (nowList.length > 30) nowList.pop();
-	// History unbegrenzt (oder selbst begrenzen)
 	if (historyList.length > 500) historyList.pop();
 
 	res.sendStatus(200);
@@ -40,6 +37,10 @@ app.get("/now", (req, res) => {
 
 app.get("/history", (req, res) => {
 	res.json(historyList);
+});
+
+app.get("/", (req, res) => {
+	res.send("Silent Join Server is running");
 });
 
 app.listen(PORT, () => {
