@@ -11,7 +11,10 @@ let historyList = [];
 
 app.post("/join", (req, res) => {
 	const data = req.body;
-	if (!data || !data.placeId) return res.sendStatus(400);
+	if (!data || !data.placeId) {
+		console.log("[FEHLER] Ungültige Daten empfangen");
+		return res.sendStatus(400);
+	}
 
 	const entry = {
 		placeId: data.placeId,
@@ -27,6 +30,15 @@ app.post("/join", (req, res) => {
 
 	if (nowList.length > 30) nowList.pop();
 	if (historyList.length > 500) historyList.pop();
+
+	// Log zum Testen
+	console.log("=================================");
+	console.log("[JOIN EMPFANGEN]");
+	console.log("Place ID   :", entry.placeId);
+	console.log("Place Name :", entry.placeName);
+	console.log("Spieler    :", entry.playerName, `(${entry.playerId})`);
+	console.log("Zeit       :", new Date().toLocaleString());
+	console.log("=================================");
 
 	res.sendStatus(200);
 });
